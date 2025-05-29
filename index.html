@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced jQuery Demos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    html, body { 
+      font-family: 'Roboto', sans-serif; 
+      margin: 0; 
+      height: 100%; 
+    }
+    .container {
+      width: 100%;
+      min-height: 100%;
+      background-color: #0f172a;
+      background-image: linear-gradient(
+          45deg,
+          rgba(59, 130, 246, 0.08) 25%,
+          transparent 25%,
+          transparent 75%,
+          rgba(59, 130, 246, 0.08) 75%
+        ),
+        linear-gradient(
+          -45deg,
+          rgba(59, 130, 246, 0.08) 25%,
+          transparent 25%,
+          transparent 75%,
+          rgba(59, 130, 246, 0.08) 75%
+        ),
+        linear-gradient(
+          45deg,
+          transparent 40%,
+          rgba(99, 102, 241, 0.1) 40%,
+          rgba(99, 102, 241, 0.1) 60%,
+          transparent 60%
+        ),
+        linear-gradient(
+          -45deg,
+          transparent 40%,
+          rgba(99, 102, 241, 0.1) 40%,
+          rgba(99, 102, 241, 0.1) 60%,
+          transparent 60%
+        ),
+        radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+      background-size: 60px 60px, 60px 60px, 120px 120px, 120px 120px, 100% 100%;
+      background-position: 0 0, 30px 30px, 0 0, 60px 60px, 0 0;
+      position: relative;
+      box-sizing: border-box;
+    }
+    .container::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.03) 0px,
+          rgba(255, 255, 255, 0.03) 1px,
+          transparent 1px,
+          transparent 10px
+        ),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(255, 255, 255, 0.03) 0px,
+          rgba(255, 255, 255, 0.03) 1px,
+          transparent 1px,
+          transparent 10px
+        );
+      background-size: 20px 20px;
+      filter: blur(0.5px);
+    }
+    #loader { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      z-index: 9999; 
+      background-color: #0f172a;
+      background-image: linear-gradient(
+          45deg,
+          rgba(59, 130, 246, 0.08) 25%,
+          transparent 25%,
+          transparent 75%,
+          rgba(59, 130, 246, 0.08) 75%
+        ),
+        linear-gradient(
+          -45deg,
+          rgba(59, 130, 246, 0.08) 25%,
+          transparent 25%,
+          transparent 75%,
+          rgba(59, 130, 246, 0.08) 75%
+        ),
+        linear-gradient(
+          45deg,
+          transparent 40%,
+          rgba(99, 102, 241, 0.1) 40%,
+          rgba(99, 102, 241, 0.1) 60%,
+          transparent 60%
+        ),
+        linear-gradient(
+          -45deg,
+          transparent 40%,
+          rgba(99, 102, 241, 0.1) 40%,
+          rgba(99, 102, 241, 0.1) 60%,
+          transparent 60%
+        ),
+        radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+      background-size: 60px 60px, 60px 60px, 120px 120px, 120px 120px, 100% 100%;
+      background-position: 0 0, 30px 30px, 0 0, 60px 60px, 0 0;
+    }
+    #loader::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.03) 0px,
+          rgba(255, 255, 255, 0.03) 1px,
+          transparent 1px,
+          transparent 10px
+        ),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(255, 255, 255, 0.03) 0px,
+          rgba(255, 255, 255, 0.03) 1px,
+          transparent 1px,
+          transparent 10px
+        );
+      background-size: 20px 20px;
+      filter: blur(0.5px);
+    }
+    .intro-card { 
+      background: rgba(30, 41, 59, 0.7); 
+      backdrop-filter: blur(10px); 
+      padding: 20px; 
+      text-align: center; 
+      color: #E0E0E0; 
+      border-radius: 5px; 
+      border: 1px solid rgba(59, 130, 246, 0.3); 
+      max-width: 600px; 
+    }
+    .intro-card h1 { font-size: 2.5em; margin: 0; }
+    .intro-card p { font-size: 1.2em; margin: 10px 0; }
+    .button {
+      --main-color: rgb(59, 130, 246);
+      --main-bg-color: rgba(59, 130, 246, 0.36);
+      --pattern-color: rgba(59, 130, 246, 0.073);
+      filter: hue-rotate(0deg);
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5rem;
+      background: radial-gradient(circle, var(--main-bg-color) 0%, rgba(0, 0, 0, 0) 95%);
+      border-image: radial-gradient(circle, var(--main-color) 0%, rgba(0, 0, 0, 0) 100%) 1;
+      border-width: 1px 0 1px 0;
+      color: var(--main-color);
+      padding: 1rem 3rem;
+      font-weight: 700;
+      font-size: 1.5rem;
+      transition: background-size 0.2s ease-in-out;
+    }
+    .button:hover {
+      background-size: cover, 10px 10px, 10px 10px;
+    }
+    .button:active {
+      filter: hue-rotate(250deg);
+    }
+    #main-content { display: none; padding: 20px; color: #E0E0E0; }
+    nav#toc {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 20px;
+      position: sticky;
+      top: 20px;
+      z-index: 1000;
+    }
+    nav#toc h3 { display: none; }
+    nav#toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    nav#toc li a {
+      color: rgba(59, 130, 246, 1);
+      text-decoration: none;
+      padding: 8px 12px;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(5px);
+      border-radius: 5px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      transition: all 0.3s ease;
+    }
+    nav#toc li a:hover, nav#toc li a:focus {
+      color: rgba(99, 102, 241, 1);
+      background: rgba(15, 23, 42, 0.7);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+    .hamburger { display: none; }
+    @media (max-width: 768px) {
+      .hamburger {
+        display: block;
+        background: rgba(59, 130, 246, 0.7);
+        color: #E0E0E0;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        cursor: pointer;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+      }
+      nav#toc ul {
+        display: none;
+        flex-direction: column;
+        background: rgba(30, 41, 59, 0.7);
+        padding: 10px;
+        border-radius: 5px;
+      }
+      nav#toc ul.active { display: flex; }
+      nav#toc li a { display: block; }
+      .intro-card { max-width: 90%; }
+      section { padding: 15px; }
+      h2 { font-size: 1.5em; }
+    }
+    section { 
+      background: rgba(30, 41, 59, 0.7); 
+      backdrop-filter: blur(10px); 
+      padding: 20px; 
+      border: 1px solid rgba(59, 130, 246, 0.3); 
+      border-radius: 8px; 
+      margin: 20px 0; 
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+      box-sizing: border-box; 
+    }
+    h2 { color: rgba(59, 130, 246, 1); font-size: 1.8em; margin-bottom: 10px; }
+    h2::before { 
+      content: attr(data-number); 
+      display: inline-block; 
+      width: 30px; 
+      height: 30px; 
+      background: rgba(59, 130, 246, 0.7); 
+      color: #E0E0E0; 
+      border-radius: 50%; 
+      text-align: center; 
+      line-height: 30px; 
+      margin-right: 10px; 
+    }
+    .demo { 
+      background: rgba(15, 23, 42, 0.5); 
+      backdrop-filter: blur(8px); 
+      padding: 15px; 
+      border-radius: 5px; 
+      border: 1px solid rgba(59, 130, 246, 0.2); 
+    }
+    pre { 
+      background: rgba(15, 23, 42, 0.6); 
+      color: #E0E0E0; 
+      padding: 10px; 
+      border-radius: 5px; 
+      overflow-x: auto; 
+      overflow-y: auto; 
+      font-family: 'Courier New', monospace; 
+      border: 1px solid rgba(59, 130, 246, 0.2); 
+      font-size: 0.9em; 
+      max-width: 100%; 
+      max-height: 300px; 
+      box-sizing: border-box; 
+      white-space: pre-wrap; 
+      word-wrap: break-word; 
+      margin: 0; 
+    }
+    button:not(.button) { 
+      background: rgba(59, 130, 246, 0.7); 
+      backdrop-filter: blur(5px); 
+      color: #E0E0E0; 
+      padding: 10px 20px; 
+      border-radius: 5px; 
+      border: 1px solid rgba(59, 130, 246, 0.3); 
+      cursor: pointer; 
+      transition: all 0.3s ease; 
+    }
+    button:not(.button):hover, button:not(.button):focus { 
+      background: rgba(59, 130, 246, 0.9); 
+      transform: scale(1.05); 
+      border-color: rgba(255, 255, 255, 0.03); 
+    }
+    .highlight { 
+      animation: colorChange 2s infinite;
+      color: #E0E0E0; 
+      padding: 5px; 
+      border: 1px solid rgba(99, 102, 241, 0.3); 
+    }
+    @keyframes colorChange {
+      0% { background: rgba(99, 102, 241, 0.7); border-color: rgba(99, 102, 241, 0.3); }
+      33% { background: rgba(139, 92, 246, 0.7); border-color: rgba(139, 92, 246, 0.3); }
+      66% { background: rgba(16, 185, 129, 0.7); border-color: rgba(16, 185, 129, 0.3); }
+      100% { background: rgba(99, 102, 241, 0.7); border-color: rgba(99, 102, 241, 0.3); }
+    }
+    .correct { 
+      background: rgba(16, 185, 129, 0.7); 
+      color: #E0E0E0; 
+      border: 1px solid rgba(16, 185, 129, 0.3); 
+    }
+    .wrong { 
+      background: rgba(239, 68, 68, 0.7); 
+      color: #E0E0E0; 
+      border: 1px solid rgba(239, 68, 68, 0.3); 
+    }
+    .boom { animation: explode 0.5s ease; }
+    @keyframes explode {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .files { display: none; }
+    .progress { 
+      width: 0; 
+      height: 5px; 
+      background: rgba(59, 130, 246, 0.7); 
+      position: absolute; 
+      bottom: 0; 
+      left: 0; 
+      transition: width 3s ease; 
+    }
+    #status { 
+      position: relative; 
+      padding: 15px; 
+      background: rgba(15, 23, 42, 0.5); 
+      backdrop-filter: blur(8px); 
+      border-radius: 5px; 
+      border: 1px solid rgba(59, 130, 246, 0.2); 
+    }
+    .tooltip { 
+      position: absolute; 
+      background: rgba(30, 41, 59, 0.7); 
+      backdrop-filter: blur(10px); 
+      color: #E0E0E0; 
+      padding: 8px 12px; 
+      border-radius: 5px; 
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); 
+      z-index: 1000; 
+      border: 1px solid rgba(59, 130, 246, 0.3); 
+      font-size: 0.9em; 
+      max-width: 200px; 
+      text-align: center; 
+    }
+    :focus { outline: 2px solid rgba(59, 130, 246, 1); outline-offset: 2px; }
+    .card { 
+      background: rgba(15, 23, 42, 0.5); 
+      backdrop-filter: blur(8px); 
+      padding: 10px; 
+      margin: 5px; 
+      border-radius: 5px; 
+      border: 1px solid rgba(59, 130, 246, 0.2); 
+    }
+    .theme-block { 
+      background: rgba(15, 23, 42, 0.3); 
+      backdrop-filter: blur(5px); 
+      padding: 10px; 
+      border-radius: 5px; 
+      border: 1px solid rgba(59, 130, 246, 0.3); 
+    }
+    #box, #customBox, .option, .many, #ajaxLoader { 
+      background: rgba(15, 23, 42, 0.5); 
+      backdrop-filter: blur(8px); 
+      padding: 10px; 
+      margin: 5px 0; 
+      border-radius: 5px; 
+      border: 1px solid rgba(59, 130, 246, 0.2); 
+      color: #E0E0E0; 
+      text-align: center; 
+    }
+    .many {
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    #userForm input { 
+      background: rgba(15, 23, 42, 0.5); 
+      backdrop-filter: blur(8px); 
+      border: 1px solid rgba(59, 130, 246, 0.2); 
+      border-radius: 5px; 
+      padding: 5px; 
+      margin: 5px 0; 
+      color: #E0E0E0; 
+    }
+    #userForm label { 
+      color: #E0E0E0; 
+      margin-right: 10px; 
+    }
+    .iframe-container {
+      width: 100%;
+      height: 600px;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 20px 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(8px);
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="loader">
+      <div class="intro-card">
+        <h1>🚀 Advanced jQuery Demos</h1>
+        <p>Presented by Group 12</p>
+        <p>Explore scalable, modular jQuery techniques for modern web development. This demo builds on core concepts, showcasing advanced methods for DOM manipulation, events, async operations, and more.</p>
+        <button class="button">Start</button>
+      </div>
+    </div>
+    <div id="main-content">
+      <nav id="toc">
+        <button class="hamburger">☰ Menu</button>
+        <ul>
+          <li><a href="#objectives">What You’ll Learn</a></li>
+          <li><a href="#iframe-section">0. Recap</a></li>
+          <li><a href="#section1">1. DOM Traversal</a></li>
+          <li><a href="#section2">2. Namespaced Events</a></li>
+          <li><a href="#section3">3. Custom Events</a></li>
+          <li><a href="#section4">4. Mapping Inputs</a></li>
+          <li><a href="#section5">5. Coordinated Async</a></li>
+          <li><a href="#section6">6. Plugin Creation</a></li>
+          <li><a href="#section7">7. Structural Wrapping</a></li>
+          <li><a href="#section8">8. Element Metadata</a></li>
+          <li><a href="#section9">9. Practical .each()</a></li>
+          <li><a href="#section10">10. AJAX Hooks</a></li>
+          <li><a href="#conclusion">Conclusion</a></li>
+        </ul>
+      </nav>
+
+      <section id="objectives">
+        <h2>🎯 Agenda</h2>
+        <ul>
+          <li>Master advanced DOM traversal for hierarchical control</li>
+          <li>Manage events with namespaces and custom triggers</li>
+          <li>Handle async operations and build reusable plugins</li>
+          <li>Optimize forms, layouts, and AJAX for real-world use</li>
+        </ul>
+      </section>
+
+      <section id="iframe-section">
+        <h2 data-number="0">🖼️ Recap from previos Presentation</h2>
+        <p>Below is an embedded webpage containing our previous presentation jQuery for Beginners.</p>
+        <div class="iframe-container">
+          <iframe src="https://chaitanya-kk.github.io/WEB_DEV_jQuery/" title="External jQuery Demo" aria-label="Embedded jQuery Demo Webpage"></iframe>
+        </div>
+        <p><strong>Points to Remember:</strong><ol> <li><strong>Versatility:</strong> jQuery simplifies DOM manipulation, animations, event handling, and AJAX, making it ideal for both modern and legacy web applications.</li>
+<li><strong>Ease of Use:</strong> Its intuitive syntax and "write less, do more" approach reduce development time.</li>
+<li><strong>Interactivity:</strong> Features like animations, hover effects, and AJAX enhance user engagement.</li>
+<li><strong>Compatibility:</strong> Ensures cross-browser consistency and supports legacy systems.</li>
+<li><strong>Community and Resources:</strong> A vast plugin ecosystem and active community provide ample support and extensibility.</li></ol></p>
+      </section>
+
+      <section id="section1">
+        <h2 data-number="1">🔍 1. DOM Traversal Enhancements</h2>
+        <p>Advanced traversal with .has() and .end() for hierarchical manipulation.</p>
+        <div class="demo">
+          <p class="folder" role="button" tabindex="0" aria-expanded="false">📁 Project Folder</p>
+          <div class="files" aria-hidden="true">
+            <p>📄 report.docx</p>
+            <p>📄 summary.txt</p>
+          </div>
+        </div>
+        <pre>
+$('.folder').on('click keydown', function(e) {
+  if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+  e.preventDefault();
+  const $this = $(this);
+  const $files = $this.next('.files');
+  $files.slideToggle(400, () => {
+    const isExpanded = $files.is(':visible');
+    $this.attr('aria-expanded', isExpanded)
+         .css('transition', 'background 0.3s ease')
+         .toggleClass('highlight');
+    $files.attr('aria-hidden', !isExpanded);
+  });
+});
+        </pre>
+        <p><strong>Key Takeaway:</strong> Use .end() to chain efficiently and enhance accessibility with ARIA for dynamic content.</p>
+      </section>
+
+      <section id="section2">
+        <h2 data-number="2">🎯 2. Namespaced Event Management</h2>
+        <p>Namespaces allow fine-grained control over event binding and unbinding.</p>
+        <div class="demo">
+          <div id="box" role="button" tabindex="0" aria-label="Highlight feature disabled, click Enable Highlight to activate">Click me (Disabled)</div>
+          <button id="startBtn">Enable Highlight</button>
+          <button id="stopBtn">Disable Highlight</button>
+        </div>
+        <pre>
+$('#startBtn').click(function() {
+  $('#box').off('.highlightNS');
+  $('#box').on('click.highlightNS keydown.highlightNS', function(e) {
+    if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    const $this = $(this);
+    const isHighlighted = $this.hasClass('highlight');
+    $this.toggleClass('highlight')
+         .attr('aria-label', isHighlighted ? 'Click to remove highlight' : 'Highlight active, click to toggle')
+         .text(isHighlighted ? 'Click me (Highlighted)' : 'Click me (Active)');
+  });
+  $('#box').text('Click me (Active)').attr('aria-label', 'Highlight active, click to toggle');
+});
+$('#stopBtn').click(function() {
+  $('#box').off('.highlightNS')
+           .removeClass('highlight')
+           .text('Click me (Disabled)')
+           .attr('aria-label', 'Highlight feature disabled, click Enable Highlight to activate');
+});
+        </pre>
+        <p><strong>Key Takeaway:</strong> Namespaces enable selective event control, improving modularity.</p>
+      </section>
+
+      <section id="section3">
+        <h2 data-number="3">💥 3. Custom Event Architecture</h2>
+        <p>Define and trigger custom events like box:explode for decoupled functionality.</p>
+        <div class="demo">
+          <div id="customBox" aria-live="polite">Awaiting Action</div>
+          <button id="fireBtn">Trigger Explosion</button>
+        </div>
+        <pre>
+$('#fireBtn').click(() => $('#customBox').trigger('explode'));
+$('#customBox').on('explode', function() {
+  $(this).addClass('boom')
+         .text('💥 Exploded!')
+         .attr({ 'aria-live': 'assertive', 'aria-label': 'Explosion effect triggered' });
+  setTimeout(() => {
+    $(this).removeClass('boom');
+  }, 500);
+});
+        </pre>
+        <p><strong>Key Takeaway:</strong> Custom events decouple triggers from actions for flexible code.</p>
+      </section>
+
+      <section id="section4">
+        <h2 data-number="4">📝 4. Mapping Inputs with .map()</h2>
+        <p>Extract structured data from forms for API-ready objects.</p>
+        <div class="demo">
+          <div id="userForm">
+            <label for="userName">Name</label>
+            <input type="text" id="userName" name="name">
+            <label for="userEmail">Email</label>
+            <input type="email" id="userEmail" name="email">
+            <button id="collectData">Generate Object</button>
+            <pre id="formDataOutput"></pre>
+            <div id="form-error" style="display: none; color: rgba(239, 68, 68, 1);"></div>
+          </div>
+        </div>
+        <pre>
+$('#collectData').click(function() {
+  const $form = $('#userForm');
+  const $error = $('#form-error');
+  $error.hide();
+  try {
+    const data = $form.find('input').map(function() {
+      const value = $(this).val().trim();
+      if (!value) {
+        $(this).css('border', '2px solid rgba(239, 68, 68, 0.7)');
+        throw new Error(`Please fill in ${this.name}`);
+      }
+      $(this).css('border', '1px solid rgba(59, 130, 246, 0.2)');
+      return { [this.name]: value };
+    }).get();
+    $('#formDataOutput').text(JSON.stringify(data, null, 2))
+                       .css('color', 'rgba(59, 130, 246, 1)');
+  } catch (err) {
+    $error.text(err.message).css('color', 'rgba(239, 68, 68, 1)').fadeIn(200);
+  }
+});
+        </pre>
+        <p><strong>Key Takeaway:</strong> .map() transforms form data into structured, API-ready objects.</p>
+      </section>
+
+      <section id="section5">
+        <h2 data-number="5">⏳ 5. Coordinated Async with jQuery</h2>
+        <p>Coordinate multiple asynchronous operations with jQuery.Deferred.</p>
+        <div class="demo">
+          <div id="status" aria-live="polite">Initializing...</div>
+        </div>
+        <pre>
+const d1 = $.Deferred(), d2 = $.Deferred();
+$('#status').append('<div class="progress"></div>');
+setTimeout(() => d1.resolve('✔️ User Authenticated'), 1500);
+setTimeout(() => {
+  d2.resolve('✔️ Dashboard Loaded');
+  $('.progress').css('width', '100%');
+}, 500);
+$.when(d1, d2).done((res1, res2) => {
+  $('#status').text(`${res1}\n${res2}`).attr('aria-live', 'assertive');
+});
+        </pre>
+        <p><strong>Key Takeaway:</strong> $.when() synchronizes async tasks for reliable execution.</p>
+      </section>
+
+      <section id="section6">
+        <h2 data-number="6">🛠️ 6. jQuery Plugin Creation</h2>
+        <p>Create reusable plugins by extending $.fn.</p>
+        <div class="demo">
+          <div class="has-tip" data-tip="Hello, jQuery!" tabindex="0" role="button">Hover or focus here</div>
+        </div>
+        <pre>
+$.fn.tooltipster = function() {
+  function debounce(fn, wait) {
+    let timeout;
+    return function() {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => fn.apply(this, arguments), wait);
+    };
+  }
+  return this.each(function() {
+    const $el = $(this);
+    const tip = $el.attr('data-tip');
+    let $tooltip = null;
+    const updatePosition = debounce(() => {
+      if (!$tooltip || !$tooltip.is(':visible')) return;
+      const rect = $el[0].getBoundingClientRect();
+      const scrollY = window.scrollY || window.pageYOffset;
+      const scrollX = window.scrollX || window.pageXOffset;
+      const windowHeight = $(window).height();
+      const windowWidth = $(window).width();
+      const tooltipHeight = $tooltip.outerHeight();
+      const tooltipWidth = $tooltip.outerWidth();
+      const topPosition = rect.bottom + scrollY + 10;
+      const bottomEdge = topPosition + tooltipHeight;
+      const leftPosition = rect.left + scrollX + (rect.width / 2) - (tooltipWidth / 2);
+      const finalTop = bottomEdge > scrollY + windowHeight ? rect.top + scrollY - tooltipHeight - 10 : topPosition;
+      const finalLeft = Math.max(10, Math.min(leftPosition, scrollX + windowWidth - tooltipWidth - 10));
+      $tooltip.css({
+        top: finalTop,
+        left: finalLeft,
+        position: 'absolute'
+      });
+    }, 50);
+    $el.on('mouseenter focus', function(e) {
+      if ($tooltip) $tooltip.remove();
+      $tooltip = $('<div class="tooltip">').text(tip).appendTo('body');
+      updatePosition();
+      $tooltip.fadeIn(200);
+      $(window).on('resize.tooltip scroll.tooltip', updatePosition);
+    }).on('mouseleave blur', function() {
+      if ($tooltip) {
+        $tooltip.fadeOut(200, function() { 
+          $(this).remove(); 
+          $tooltip = null;
+        });
+      }
+      $(window).off('.tooltip');
+    });
+  });
+};
+$('.has-tip').tooltipster();
+        </pre>
+        <p><strong>Key Takeaway:</strong> Plugins via $.fn make code reusable and modular.</p>
+      </section>
+
+      <section id="section7">
+        <h2 data-number="7">🧱 7. Structural Wrapping with .wrapAll()</h2>
+        <p>Dynamically alter layout structure for theming or grouping.</p>
+        <div class="demo">
+          <div class="card">Card Alpha</div>
+          <div class="card">Card Beta</div>
+          <button id="wrapToggle">Toggle Layout Block</button>
+        </div>
+        <pre>
+$('#wrapToggle').click(function() {
+  const $cards = $('.card');
+  const $wrapper = $cards.parent('.theme-block');
+  if ($wrapper.length) {
+    $cards.unwrap();
+    $(this).text('Toggle Layout Block');
+  } else {
+    $cards.wrapAll('<div class="theme-block"></div>');
+    $('.theme-block').hide().fadeIn(500);
+    $(this).text('Remove Layout Block');
+  }
+});
+        </pre>
+        <p><strong>Key Takeaway:</strong> .wrapAll() dynamically restructures layouts with ease.</p>
+      </section>
+
+      <section id="section8">
+        <h2 data-number="8">📊 8. Element Metadata via .data()</h2>
+        <p>Store and retrieve state without polluting markup.</p>
+        <div class="demo">
+          <div class="option" data-correct="true" data-label="A" tabindex="0" role="button" aria-label="Select Option A">Option A</div>
+          <div class="option" data-correct="false" data-label="B" tabindex="0" role="button" aria-label="Select Option B">Option B</div>
+          <div class="option" data-correct="false" data-label="C" tabindex="0" role="button" aria-label="Select Option C">Option C</div>
+          <button id="resetOptions">Reset Options</button>
+        </div>
+        <pre>
+$('.option').on('click keydown', function(e) {
+  if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+  e.preventDefault();
+  const $this = $(this);
+  if ($this.data('answered')) return;
+  const correct = $this.data('correct') === true;
+  const label = $this.data('label');
+  $this.data('answered', true)
+       .addClass(correct ? 'correct' : 'wrong')
+       .text(correct ? 'Option ' + label + ' - Correct!' : 'Option ' + label + ' - Wrong!')
+       .attr('aria-label', correct ? 'Correct option ' + label + ' selected' : 'Incorrect option ' + label + ' selected');
+});
+$('#resetOptions').on('click', function() {
+  $('.option').data('answered', false)
+              .removeClass('correct wrong')
+              .each(function() {
+                const label = $(this).data('label');
+                $(this).text('Option ' + label)
+                       .attr('aria-label', 'Select Option ' + label);
+              });
+});
+        </pre>
+        <p><strong>Key Takeaway:</strong> .data() manages state cleanly for dynamic behavior.</p>
+      </section>
+
+      <section id="section9">
+        <h2 data-number="9">🔄 9. Practical Use of .each()</h2>
+        <p>Safe iteration over jQuery collections for dynamic updates.</p>
+        <div class="demo">
+          <div class="many">Box 1</div>
+          <div class="many">Box 2</div>
+          <div class="many">Box 3</div>
+          <button id="toggleEach">Toggle Highlight</button>
+        </div>
+        <pre>
+const $many = $('.many');
+$('#toggleEach').click(() => {
+  $many.each(function() {
+    const $this = $(this);
+    const isHighlighted = $this.hasClass('highlight');
+    $this.toggleClass('highlight')
+         .attr('aria-label', isHighlighted ? 'Box ' + $this.text() + ', click to remove highlight' : 'Box ' + $this.text() + ', click to highlight');
+  });
+});
+        </pre>
+        <p><strong>Key Takeaway:</strong> .each() ensures safe, iterative updates to elements.</p>
+      </section>
+
+      <section id="section10">
+        <h2 data-number="10">🌐 10. Ajax Global Event Hooks</h2>
+        <p>Track AJAX request lifecycles globally with ajaxStart and ajaxStop.</p>
+        <div class="demo">
+          <div id="ajaxLoader" aria-live="polite">Waiting...</div>
+          <div id="ajax-error" style="display: none; color: rgba(239, 68, 68, 1);"></div>
+          <button id="fakeAjax">Fetch Data</button>
+        </div>
+        <pre>
+$(document).ajaxStart(function() {
+  $('#ajaxLoader').text('Loading...').attr('aria-busy', 'true');
+}).ajaxStop(function() {
+  $('#ajaxLoader').text('Request completed').attr('aria-busy', 'false');
+}).ajaxError(function(event, jqXHR, settings, thrownError) {
+  const errorMsg = thrownError || jqXHR.statusText || 'Request failed';
+  $('#ajax-error').text(`Error: ${errorMsg}`).fadeIn(300);
+});
+$('#fakeAjax').on('click', function() {
+  $('#ajax-error').hide();
+  $.ajax({
+    type: 'GET',
+    url: 'https://jsonplaceholder.typicode.com/posts/1',
+    timeout: 2000,
+    success: (data) => {
+      console.log('Success:', data);
+      $('#ajaxLoader').text('Data fetched successfully').attr('aria-busy', 'false');
+    },
+    error: (jqXHR, textStatus, errorThrown) => {
+      $('#ajax-error').text(`Error: ${errorThrown || textStatus || 'Unknown error'}`).fadeIn(300);
+    }
+  });
+});
+        </pre>
+        <p><strong>Key Takeaway:</strong> Global AJAX hooks track and manage request lifecycles.</p>
+      </section>
+
+      <section id="conclusion">
+        <h2 data-number="11">🏁 Conclusion</h2>
+        <p>We’ve explored 10 advanced jQuery techniques to build scalable, modular, and user-friendly web systems:</p>
+        <ul>
+          <li>Enhanced DOM traversal and event management for precision</li>
+          <li>Custom events and plugins for decoupled, reusable code</li>
+          <li>Async coordination and AJAX hooks for robust performance</li>
+          <li>Form mapping and structural wrapping for dynamic interfaces</li>
+        </ul>
+        <p><strong>Why It Matters:</strong> These methods empower developers to create accessible, efficient, and engaging web experiences.</p>
+        <p><strong>Next Steps:</strong> Experiment with these demos, adapt them to your projects, and explore the jQuery docs for deeper insights!</p>
+        <a href="https://chaitanya-kk.github.io/Adv-jQuery/bonus.html"><button id="downloadResources"><strong>✨ Demo 1:</strong> A Shopify type application showcasing Usage of jQuery.</button></a>
+        <a href="https://chaitanya-kk.github.io/Adv-jQuery/bonus.html"><button id="downloadResources"><strong>✨ Demo 2:</strong> Extra - A Scifi + Robotic follow Webpage using Spline.</button></a>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      // Loader and Navigation
+      $('.button').on('click', function() {
+        $('#loader').fadeOut(500, function() {
+          $('#main-content').fadeIn(500);
+        });
+      });
+
+      $('.hamburger').on('click', function() {
+        $('#toc ul').toggleClass('active');
+      });
+
+      $('#toc a').on('click', function(e) {
+        e.preventDefault();
+        const target = $(this).attr('href');
+        $('html, body').animate({ scrollTop: $(target).offset().top - 60 }, 500);
+        if ($(window).width() <= 768) {
+          $('#toc ul').removeClass('active');
+        }
+      });
+
+      // Section 1: DOM Traversal Enhancements
+      $('.folder').on('click keydown', function(e) {
+        if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        const $this = $(this);
+        const $files = $this.next('.files');
+        $files.slideToggle(400, function() {
+          const isExpanded = $files.is(':visible');
+          $this.attr('aria-expanded', isExpanded)
+               .css('transition', 'background 0.3s ease')
+               .toggleClass('highlight');
+          $files.attr('aria-hidden', !isExpanded);
+        });
+      });
+
+      // Section 2: Namespaced Event Management
+      $('#startBtn').on('click', function() {
+        $('#box').off('.highlightNS');
+        $('#box').on('click.highlightNS keydown.highlightNS', function(e) {
+          if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+          e.preventDefault();
+          const $this = $(this);
+          const isHighlighted = $this.hasClass('highlight');
+          $this.toggleClass('highlight')
+               .attr('aria-label', isHighlighted ? 'Click to remove highlight' : 'Highlight active, click to toggle')
+               .text(isHighlighted ? 'Click me (Highlighted)' : 'Click me (Active)');
+        });
+        $('#box').text('Click me (Active)').attr('aria-label', 'Highlight active, click to toggle');
+      });
+
+      $('#stopBtn').on('click', function() {
+        $('#box').off('.highlightNS')
+                 .removeClass('highlight')
+                 .text('Click me (Disabled)')
+                 .attr('aria-label', 'Highlight feature disabled, click Enable Highlight to activate');
+      });
+
+      // Section 3: Custom Event Architecture
+      $('#fireBtn').on('click', function() {
+        $('#customBox').trigger('explode');
+      });
+
+      $('#customBox').on('explode', function() {
+        $(this).addClass('boom')
+               .text('💥 Exploded!')
+               .attr({ 'aria-live': 'assertive', 'aria-label': 'Explosion effect triggered' });
+        setTimeout(() => {
+          $(this).removeClass('boom');
+        }, 500);
+      });
+
+      // Section 4: Mapping Inputs with .map()
+      $('#collectData').on('click', function() {
+        const $form = $('#userForm');
+        const $error = $('#form-error');
+        $error.hide();
+        try {
+          const data = $form.find('input').map(function() {
+            const value = $(this).val().trim();
+            if (!value) {
+              $(this).css('border', '2px solid rgba(239, 68, 68, 0.7)');
+              throw new Error(`Please fill in ${this.name}`);
+            }
+            $(this).css('border', '1px solid rgba(59, 130, 246, 0.2)');
+            return { [this.name]: value };
+          }).get();
+          $('#formDataOutput').text(JSON.stringify(data, null, 2))
+                             .css('color', 'rgba(59, 130, 246, 1)');
+        } catch (err) {
+          $error.text(err.message).css('color', 'rgba(239, 68, 68, 1)').fadeIn(200);
+        }
+      });
+
+      // Section 5: Coordinated Async with $.when()
+      const d1 = $.Deferred(), d2 = $.Deferred();
+      $('#status').append('<div class="progress"></div>');
+      setTimeout(() => d1.resolve('✔️ User Authenticated'), 1500);
+      setTimeout(() => {
+        d2.resolve('✔️ Dashboard Loaded');
+        $('.progress').css('width', '100%');
+      }, 500);
+      $.when(d1, d2).done((res1, res2) => {
+        $('#status').text(`${res1}\n${res2}`).attr('aria-live', 'assertive');
+      });
+
+      // Section 6: jQuery Plugin Creation
+      $.fn.tooltipster = function() {
+        function debounce(fn, wait) {
+          let timeout;
+          return function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => fn.apply(this, arguments), wait);
+          };
+        }
+        return this.each(function() {
+          const $el = $(this);
+          const tip = $el.attr('data-tip');
+          let $tooltip = null;
+          const updatePosition = debounce(() => {
+            if (!$tooltip || !$tooltip.is(':visible')) return;
+            const rect = $el[0].getBoundingClientRect();
+            const scrollY = window.scrollY || window.pageYOffset;
+            const scrollX = window.scrollX || window.pageXOffset;
+            const windowHeight = $(window).height();
+            const windowWidth = $(window).width();
+            const tooltipHeight = $tooltip.outerHeight();
+            const tooltipWidth = $tooltip.outerWidth();
+            const topPosition = rect.bottom + scrollY + 10;
+            const bottomEdge = topPosition + tooltipHeight;
+            const leftPosition = rect.left + scrollX + (rect.width / 2) - (tooltipWidth / 2);
+            const finalTop = bottomEdge > scrollY + windowHeight ? rect.top + scrollY - tooltipHeight - 10 : topPosition;
+            const finalLeft = Math.max(10, Math.min(leftPosition, scrollX + windowWidth - tooltipWidth - 10));
+            $tooltip.css({
+              top: finalTop,
+              left: finalLeft,
+              position: 'absolute'
+            });
+          }, 50);
+          $el.on('mouseenter focus', function(e) {
+            if ($tooltip) $tooltip.remove();
+            $tooltip = $('<div class="tooltip">').text(tip).appendTo('body');
+            updatePosition();
+            $tooltip.fadeIn(200);
+            $(window).on('resize.tooltip scroll.tooltip', updatePosition);
+          }).on('mouseleave blur', function() {
+            if ($tooltip) {
+              $tooltip.fadeOut(200, function() { 
+                $(this).remove(); 
+                $tooltip = null;
+              });
+            }
+            $(window).off('.tooltip');
+          });
+        });
+      };
+      $('.has-tip').tooltipster();
+
+      // Section 7: Structural Wrapping with .wrapAll()
+      $('#wrapToggle').on('click', function() {
+        const $cards = $('.card');
+        const $wrapper = $cards.parent('.theme-block');
+        if ($wrapper.length) {
+          $cards.unwrap();
+          $(this).text('Toggle Layout Block');
+        } else {
+          $cards.wrapAll('<div class="theme-block"></div>');
+          $('.theme-block').hide().fadeIn(500);
+          $(this).text('Remove Layout Block');
+        }
+      });
+
+      // Section 8: Element Metadata via .data()
+      $('.option').on('click keydown', function(e) {
+        if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        const $this = $(this);
+        if ($this.data('answered')) return;
+        const correct = $this.data('correct') === true;
+        const label = $this.data('label');
+        $this.data('answered', true)
+             .addClass(correct ? 'correct' : 'wrong')
+             .text(correct ? 'Option ' + label + ' - Correct!' : 'Option ' + label + ' - Wrong!')
+             .attr('aria-label', correct ? 'Correct option ' + label + ' selected' : 'Incorrect option ' + label + ' selected');
+      });
+      $('#resetOptions').on('click', function() {
+        $('.option').data('answered', false)
+                    .removeClass('correct wrong')
+                    .each(function() {
+                      const label = $(this).data('label');
+                      $(this).text('Option ' + label)
+                             .attr('aria-label', 'Select Option ' + label);
+                    });
+      });
+
+      // Section 9: Practical Use of .each()
+      const $many = $('.many');
+      $('#toggleEach').on('click', function() {
+        $many.each(function() {
+          const $this = $(this);
+          const isHighlighted = $this.hasClass('highlight');
+          $this.toggleClass('highlight')
+               .attr('aria-label', isHighlighted ? 'Box ' + $this.text() + ', click to remove highlight' : 'Box ' + $this.text() + ', click to highlight');
+        });
+      });
+
+      // Section 10: Ajax Global Event Hooks
+      $(document).ajaxStart(function() {
+        $('#ajaxLoader').text('Loading...').attr('aria-busy', 'true');
+      }).ajaxStop(function() {
+        $('#ajaxLoader').text('Request completed').attr('aria-busy', 'false');
+      }).ajaxError(function(event, jqXHR, settings, thrownError) {
+        const errorMsg = thrownError || jqXHR.statusText || 'Request failed';
+        $('#ajax-error').text(`Error: ${errorMsg}`).fadeIn(300);
+      });
+
+      $('#fakeAjax').on('click', function() {
+        $('#ajax-error').hide();
+        $.ajax({
+          type: 'GET',
+          url: 'https://jsonplaceholder.typicode.com/posts/1',
+          timeout: 2000,
+          success: (data) => {
+            console.log('Success:', data);
+            $('#ajaxLoader').text('Data fetched successfully').attr('aria-busy', 'false');
+          },
+          error: (jqXHR, textStatus, errorThrown) => {
+            $('#ajax-error').text(`Error: ${errorThrown || textStatus || 'Unknown error'}`).fadeIn(300);
+          }
+        });
+      });
+
+      // Conclusion: Download Resources
+      $('#downloadResources').on('click', function() {
+        const $this = $(this);
+        $this.text('Processing...').attr('aria-busy', 'true');
+        setTimeout(() => {
+          $this.text('📥 Download Resources')
+               .attr({
+                 'aria-busy': 'false',
+                 'aria-label': 'Resources downloaded'
+               });
+          alert('Imagine this links to a zip of code, docs, and slides!');
+        }, 1000);
+      });
+    });
+
+  </script>
+</body>
+</html>
